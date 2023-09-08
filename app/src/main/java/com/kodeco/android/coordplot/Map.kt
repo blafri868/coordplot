@@ -17,8 +17,8 @@ import com.kodeco.android.coordplot.ui.theme.MyApplicationTheme
 fun Map(xPercent: Float, yPercent: Float, modifier: Modifier = Modifier) {
     val mapSize = 300
     val pointSize = 36
-    val xOffset = (xPercent * mapSize) - (pointSize / 2)
-    val yOffset = (yPercent * mapSize) - (pointSize / 2)
+    val xOffset = (xPercent * mapSize) - (pointSize * xPercent)
+    val yOffset = (yPercent * mapSize) - (pointSize * yPercent)
 
     Box(
         modifier = modifier
