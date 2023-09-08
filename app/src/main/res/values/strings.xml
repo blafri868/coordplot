@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">My Application</string>
+    <string name="map_background_description">Picture of a map</string>
+    <string name="map_pointer_description">Map Pointer</string>
 </resources>
