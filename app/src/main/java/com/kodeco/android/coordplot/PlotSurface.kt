@@ -29,7 +29,10 @@ fun PlotSurface() {
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
+            verticalArrangement = Arrangement.Center,
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp)
         ) {
             Map(
                 xPercent = xPercentage,
