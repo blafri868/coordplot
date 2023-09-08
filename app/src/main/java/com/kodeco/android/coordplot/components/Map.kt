@@ -1,36 +1,43 @@
-package com.kodeco.android.coordplot
+package com.kodeco.android.coordplot.components
 
-import androidx.compose.foundation.background
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.kodeco.android.coordplot.R
 import com.kodeco.android.coordplot.ui.theme.MyApplicationTheme
 
 @Composable
 fun Map(xPercent: Float, yPercent: Float, modifier: Modifier = Modifier) {
     val mapSize = 300
-    val pointSize = 36
+    val pointSize = 20
     val xOffset = (xPercent * mapSize) - (pointSize * xPercent)
     val yOffset = (yPercent * mapSize) - (pointSize * yPercent)
 
     Box(
         modifier = modifier
             .size(mapSize.dp)
-            .background(Color.Blue)
     ) {
-        Box(
+        Image(
+            modifier = Modifier.fillMaxSize(),
+            contentScale = ContentScale.Crop,
+            painter = painterResource(id = R.drawable.map_background),
+            contentDescription = stringResource(R.string.map_background_description)
+        )
+        Image(
+            painter = painterResource(id = R.drawable.ic_x_mark),
+            contentDescription = stringResource(R.string.map_pointer_description),
             modifier = Modifier
-                .offset(xOffset.dp, yOffset.dp)
-                .clip(shape = CircleShape)
                 .size(pointSize.dp)
-                .background(Color.Green)
+                .offset(xOffset.dp, yOffset.dp)
         )
     }
 }
