@@ -12,5 +12,5 @@ dependencyResolutionManagement {
         mavenCentral()
     }
 }
-rootProject.name = "Coordinate Plotter"
+rootProject.name = "Country Info"
 include(":app")

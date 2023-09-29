@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace = "com.kodeco.android.coordplot"
+    namespace = "com.kodeco.android.countryinfo"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "com.kodeco.android.coordplot"
+        applicationId = "com.kodeco.android.countryinfo"
         minSdk = 26
         targetSdk = 34
         versionCode = 1
@@ -67,9 +67,24 @@ dependencies {
     implementation(libs.lifecycle.runtime.ktx)
     implementation(libs.activity.compose)
     implementation(libs.navigation)
-    implementation(libs.core.splashscreen)
     implementation(platform(libs.compose.bom))
     implementation(libs.bundles.compose.ui)
     implementation(libs.bundles.androidx.activity)
     implementation(libs.fonts)
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.moshi)
+    implementation(libs.retrofit.moshi.converter)
+    implementation(libs.coil)
+
+    ksp (libs.moshiCodeGen)
+
+    testImplementation(libs.junit)
+
+    androidTestImplementation(libs.androidx.test.ext.junit)
+    androidTestImplementation(libs.espresso)
+    androidTestImplementation(platform(libs.compose.bom))
+    androidTestImplementation(libs.ui.test.junit4)
+
+    debugImplementation(libs.ui.tooling)
+    debugImplementation(libs.ui.test.manifest)
 }

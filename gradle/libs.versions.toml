@@ -13,17 +13,19 @@ androidx-activity = "1.7.2"
 kotlinx-coroutines = "1.7.1"
 androidx-appcompat = "1.6.1"
 compose-integration-constraintlayout = "1.0.1"
-material3 = "1.2.0-alpha02"
-fonts = "1.4.3"
-navigation="2.6.0"
-core-splashscreen="1.0.1"
+material3 = "1.2.0-alpha06"
+fonts = "1.5.0"
+retrofit="2.9.0"
+moshi="1.14.0"
+coil="2.4.0"
+navigation="2.7.1"
+espresso="3.5.1"
 
 [libraries]
 core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "core-ktx" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-test-ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-ext-junit" }
 lifecycle-runtime-ktx = { group = "androidx.lifecycle", name = "lifecycle-runtime-ktx", version.ref = "lifecycle-runtime-ktx" }
-core-splashscreen = { group ="androidx.core", name="core-splashscreen", version.ref = "core-splashscreen" }
 
 androidx-activity = { module = "androidx.activity:activity", version.ref = "androidx-activity" }
 androidx-activity-ktx = { module = "androidx.activity:activity-ktx", version.ref = "androidx-activity" }
@@ -51,8 +53,17 @@ ui-test-junit4 = { group = "androidx.compose.ui", name = "ui-test-junit4" }
 material3 = { group = "androidx.compose.material3", name = "material3" , version.ref="material3"}
 material = { group = "androidx.compose.material", name = "material" }
 navigation = { module = "androidx.navigation:navigation-compose" , version.ref="navigation"}
+coil = { module = "io.coil-kt:coil-compose", version.ref="coil" }
+espresso = { module = "androidx.test.espresso:espresso-core", version.ref="espresso" }
 
 fonts = {  module = "androidx.compose.ui:ui-text-google-fonts", version.ref="fonts" }
+
+# Retrofit
+retrofit = {module="com.squareup.retrofit2:retrofit", version.ref="retrofit" }
+retrofit-moshi = {module="com.squareup.moshi:moshi-kotlin", version.ref="moshi" }
+retrofit-moshi-converter = {module="com.squareup.retrofit2:converter-moshi", version.ref="retrofit" }
+moshiCodeGen = {module="com.squareup.moshi:moshi-kotlin-codegen", version.ref="moshi" }
+
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }
