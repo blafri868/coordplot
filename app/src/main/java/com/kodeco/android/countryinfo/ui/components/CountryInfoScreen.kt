@@ -1,63 +1,70 @@
 package com.kodeco.android.countryinfo.ui.components
 
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.kodeco.android.countryinfo.model.Country
-import com.kodeco.android.countryinfo.networking.CountriesApi
-import com.kodeco.android.countryinfo.networking.NetworkResponse
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.kodeco.android.countryinfo.models.Country
+import com.kodeco.android.countryinfo.network.CountryService
+import com.kodeco.android.countryinfo.sample.sampleCountries
+import retrofit2.Response
+
+sealed class CountryInfoState {
+    object Loading : CountryInfoState()
+    data class Success(val countries: List<Country>) : CountryInfoState()
+    data class Error(val error: Throwable) : CountryInfoState()
+}
 
 @Composable
-fun CountryInfoScreen(onNavigateToCountryError: () -> Unit) {
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background
-    ) {
-        var countries by remember { mutableStateOf(listOf<Country>()) }
-        val scope = rememberCoroutineScope()
+fun CountryInfoScreen(
+    service: CountryService,
+) {
+    var state: CountryInfoState by remember { mutableStateOf(CountryInfoState.Loading) }
 
-        LaunchedEffect(Unit) {
-            scope.launch(Dispatchers.IO) {
-                val response = CountriesApi.getCountries()
-
-                // I couldn't figure out why this was happening but if there was an error getting
-                // the countries it would navigate me to the error page. On the error page there
-                // is a button to retry that would pop the stack and send you back to this page
-                // to try to get the countries again, but when you click retry it would try to load
-                // the page again, fail and be redirected back to the error page as expected.
-                // The error would show for a short time but then disappear, but if i put a delay
-                // so the navigation does not happen as fast everything would work. Not sure how
-                // fix this. You could just comment the delay and change the GET annotation on the
-                // Countries service API to all123 so that a 404 error is thrown to reproduce the
-                // error i was getting
-                delay(1000L)
-                withContext(Dispatchers.Main) {
-                    when (response) {
-                        is NetworkResponse.HTTPSuccess -> countries = response.data
-                        else -> onNavigateToCountryError()
-                    }
-                }
+    Surface {
+        when(val curState = state) {
+            is CountryInfoState.Loading -> Loading()
+            is CountryInfoState.Success -> CountryInfoList(curState.countries) {
+                state = CountryInfoState.Loading
+            }
+            is CountryInfoState.Error -> CountryErrorScreen(curState.error) {
+                state = CountryInfoState.Loading
             }
         }
+    }
 
-        CountryInfoList(countries = countries)
+    if (state == CountryInfoState.Loading) {
+        LaunchedEffect(key1 = "fetch-countries") {
+            // TODO: Move this to a private method
+            //  and have the method return a Flow<CountryInfoState>
+            //  NOTE: This method can utilize the flow { } builder.
+            //  Don't forget you can also remove the try/catch and catch directly from the flow!
+            state = try {
+                val countriesResponse = service.getAllCountries()
+
+                if (countriesResponse.isSuccessful) {
+                    CountryInfoState.Success(countriesResponse.body()!!)
+                } else {
+                    CountryInfoState.Error(Throwable("Request failed: ${countriesResponse.message()}"))
+                }
+            } catch (exception: Exception) {
+                CountryInfoState.Error(exception)
+            }
+        }
     }
 }
 
-// TODO fill out the preview.
-@Preview(showBackground = true)
+@Preview
 @Composable
-fun CountryInfoScreenPreview() { }
+fun CountryInfoScreenPreview() {
+    CountryInfoScreen(
+        service = object : CountryService {
+            override suspend fun getAllCountries(): Response<List<Country>> =
+                Response.success(sampleCountries)
+        },
+    )
+}

@@ -4,43 +4,41 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Card
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.kodeco.android.countryinfo.model.Country
-import com.kodeco.android.countryinfo.model.CountryFlags
-import com.kodeco.android.countryinfo.model.CountryName
+import com.kodeco.android.countryinfo.models.Country
+import com.kodeco.android.countryinfo.models.CountryFlags
+import com.kodeco.android.countryinfo.models.CountryName
+import com.kodeco.android.countryinfo.sample.sampleCountry
 
-// TODO fill out CountryInfoRow
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun CountryInfoRow(country: Country) {
-    val name = country.commonName
-    val capital = country.capital?.get(0) ?: ""
-
+fun CountryInfoRow(
+    country: Country,
+    onClick: () -> Unit,
+) {
     Card(
-        modifier = Modifier.fillMaxWidth().padding(all = 5.dp)
+        onClick = onClick,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(all = 8.dp),
     ) {
-        Column(
-            modifier = Modifier.padding(all = 5.dp)
-        ) {
-            Text(text = "Name: $name")
-            Text(text = "Capital: $capital")
+        Column(modifier = Modifier.padding(all = 8.dp)) {
+            Text(text = "Name: ${country.commonName}")
+            Text(text = "Capital: ${country.capital?.firstOrNull() ?: "N/A"}")
         }
     }
 }
 
-// TODO fill out the preview.
-@Preview(showBackground = true)
+@Preview
 @Composable
 fun CountryInfoRowPreview() {
-    val country = Country(
-        name = CountryName("Trinidad & Tobago"),
-        capital = listOf("Port of Spain"),
-        population = 1L,
-        area = 1.0,
-        flags = CountryFlags("hhh")
+    CountryInfoRow(
+        country = sampleCountry,
+        onClick = {},
     )
-    CountryInfoRow(country)
 }

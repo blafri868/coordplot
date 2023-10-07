@@ -1,4 +1,4 @@
-package com.kodeco.android.countryinfo.model
+package com.kodeco.android.countryinfo.models
 
 import com.squareup.moshi.JsonClass
 

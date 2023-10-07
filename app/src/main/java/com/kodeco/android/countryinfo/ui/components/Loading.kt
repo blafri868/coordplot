@@ -1,6 +1,7 @@
 package com.kodeco.android.countryinfo.ui.components
 
-import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.runtime.Composable
@@ -8,13 +9,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 
-// TODO fill out Loading. NOTE this is above-and-beyond the requirements
-//  for the homework assignment.
 @Composable
-fun Loading() { }
+fun Loading() {
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+    ) {
 
-// TODO fill out preview. NOTE this is above-and-beyond the requirements
-//  for the homework assignment.
+        // TODO: Show the current Flows.counterFlow value here in Text composable
+        CircularProgressIndicator()
+    }
+}
+
 @Preview
 @Composable
-fun LoadingPreview() { }
+fun LoadingPreview() {
+    Loading()
+}

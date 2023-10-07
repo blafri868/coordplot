@@ -1,52 +1,48 @@
 package com.kodeco.android.countryinfo.ui.components
 
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import com.kodeco.android.countryinfo.model.Country
-import com.kodeco.android.countryinfo.model.CountryFlags
-import com.kodeco.android.countryinfo.model.CountryName
+import com.kodeco.android.countryinfo.models.Country
+import com.kodeco.android.countryinfo.sample.sampleCountries
 
-// TODO fill out CountryInfoList
 @Composable
-fun CountryInfoList(countries: List<Country>) {
-    LazyColumn(contentPadding = PaddingValues(vertical = 5.dp)) {
-        items(items = countries) {country ->
-            CountryInfoRow(country = country)
+fun CountryInfoList(
+    countries: List<Country>,
+    onRefreshClick: () -> Unit, // TODO: Utilize this onRefreshClick
+) {
+    var selectedCountry: Country? by remember { mutableStateOf(null) }
+
+    Column {
+        // TODO: Implement the Row composable here that contains the
+        //  the tap/back flow data and the refresh button.
+
+        selectedCountry?.let { country ->
+            CountryDetailsScreen(country) { selectedCountry = null }
+        } ?: run {
+            LazyColumn {
+                items(countries) { country ->
+                    CountryInfoRow(country) {
+                        selectedCountry = country
+                        // TODO: Call into Flows.tap() here
+                    }
+                }
+            }
         }
     }
 }
 
-// TODO fill out the preview.
-@Preview(showBackground = true)
+@Preview
 @Composable
 fun CountryInfoListPreview() {
-    val countries = listOf(
-        Country(
-            name = CountryName("Trinidad & Tobago"),
-            capital = listOf("Port of Spain"),
-            population = 1L,
-            area = 1.0,
-            flags = CountryFlags("hhh")
-        ),
-        Country(
-            name = CountryName("Barbados"),
-            capital = listOf("Bridge Town"),
-            population = 1L,
-            area = 1.0,
-            flags = CountryFlags("hhh")
-        ),
-        Country(
-            name = CountryName("Jamaica"),
-            capital = listOf("Kingston"),
-            population = 1L,
-            area = 1.0,
-            flags = CountryFlags("hhh")
-        )
+    CountryInfoList(
+        countries = sampleCountries,
+        onRefreshClick = {},
     )
-
-    CountryInfoList(countries)
 }
