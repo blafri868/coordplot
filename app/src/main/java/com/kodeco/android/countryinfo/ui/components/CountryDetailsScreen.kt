@@ -68,7 +68,7 @@ fun CountryDetailsScreen(
     }
 }
 
-@Preview
+@Preview(showBackground = true)
 @Composable
 fun CountryDetailsScreenPreview() {
     CountryDetailsScreen(
