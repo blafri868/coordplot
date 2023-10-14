@@ -11,6 +11,7 @@ val sampleCountries = listOf(
         population = 328_239_523,
         area = 9_833_520f,
         flags = CountryFlags(png = "", svg = ""),
+        cca3 = "USA",
     ),
     Country(
         name = CountryName(common = "Canada"),
@@ -18,6 +19,7 @@ val sampleCountries = listOf(
         population = 37_742_154,
         area = 9_984_670f,
         flags = CountryFlags(png = "", svg = ""),
+        cca3 = "CAN"
     ),
     Country(
         name = CountryName(common = "Mexico"),
@@ -25,6 +27,7 @@ val sampleCountries = listOf(
         population = 126_014_024,
         area = 1_964_375f,
         flags = CountryFlags(png = "", svg = ""),
+        cca3 = "MEX"
     ),
     Country(
         name = CountryName(common = "Germany"),
@@ -32,6 +35,7 @@ val sampleCountries = listOf(
         population = 83_517_045,
         area = 137_847f,
         flags = CountryFlags(png = "", svg = ""),
+        cca3 = "DEU"
     ),
 )
 
@@ -41,4 +45,5 @@ val sampleCountry = Country(
     population = 328_239_523,
     area = 9_833_520f,
     flags = CountryFlags(png = "", svg = ""),
+    cca3 = "USA"
 )

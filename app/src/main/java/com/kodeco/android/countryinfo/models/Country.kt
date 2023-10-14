@@ -13,6 +13,7 @@ data class Country(
     val population: Long,
     val area: Float,
     val flags: CountryFlags,
+    val cca3: String
 ) : Parcelable {
     @IgnoredOnParcel
     val mainCapital = capital?.firstOrNull() ?: "N/A"
