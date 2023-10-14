@@ -12,7 +12,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 
 @Composable
-fun CountryErrorScreen(error: Throwable, onRetry: () -> Unit) {
+fun Error(error: Throwable, onRetry: () -> Unit) {
     Column(
         modifier = Modifier.fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -28,8 +28,8 @@ fun CountryErrorScreen(error: Throwable, onRetry: () -> Unit) {
 
 @Preview
 @Composable
-fun CountryErrorScreenPreview() {
-    CountryErrorScreen(
+fun ErrorPreview() {
+    Error(
         error = Throwable("Error message"),
         onRetry = {},
     )
