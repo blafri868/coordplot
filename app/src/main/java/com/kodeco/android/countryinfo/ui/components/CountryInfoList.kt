@@ -18,6 +18,7 @@ fun CountryInfoList(
     countries: List<Country>,
     onRefreshTap: () -> Unit,
     onCountryRowTap: (countryIndex: Int) -> Unit,
+    onCountryFavorite: (countryIndex: Int) -> Unit
 ) {
     Row(
         modifier = Modifier.fillMaxWidth(),
@@ -31,10 +32,8 @@ fun CountryInfoList(
         itemsIndexed(countries) { index, country ->
             CountryInfoRow(
                 country = country,
-                onTap = {
-                    onCountryRowTap(index)
-                },
-                // TODO - OPTIONAL: wire up favorite listener
+                onTap = { onCountryRowTap(index) },
+                onFavorite = { onCountryFavorite(index) }
             )
         }
     }

@@ -1,10 +1,18 @@
 package com.kodeco.android.countryinfo.ui.components
 
+import androidx.compose.animation.core.animateDp
+import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -16,11 +24,25 @@ import com.kodeco.android.countryinfo.models.Country
 import com.kodeco.android.countryinfo.sample.sampleCountry
 import com.kodeco.android.countryinfo.ui.theme.MyApplicationTheme
 
+private enum class FlagState {
+    Expanded,
+    Shrunk
+}
+
 @Composable
 fun CountryDetails(
     country: Country,
     modifier: Modifier,
 ) {
+    var flagState by remember { mutableStateOf(FlagState.Shrunk) }
+    val flagTransition = updateTransition(targetState = flagState, label = "Flag transition")
+    val flagWidth by flagTransition.animateDp(label = "Flag size transition") {state ->
+        when (state) {
+            FlagState.Shrunk -> 150.dp
+            FlagState.Expanded -> 300.dp
+        }
+    }
+
     LazyColumn(modifier = modifier) {
         item { Text(text = "Capital: ${country.mainCapital}") }
         item { Text(text = "Population: ${country.population}") }
@@ -32,8 +54,16 @@ fun CountryDetails(
                     .crossfade(true)
                     .build(),
                 contentDescription = "Flag",
-                contentScale = ContentScale.Fit,
-                modifier = Modifier.border(1.dp, color = MaterialTheme.colorScheme.primary),
+                contentScale = ContentScale.FillWidth,
+                modifier = Modifier
+                    .border(1.dp, color = MaterialTheme.colorScheme.primary)
+                    .width(flagWidth)
+                    .clickable {
+                        flagState = when (flagState) {
+                            FlagState.Expanded -> FlagState.Shrunk
+                            FlagState.Shrunk -> FlagState.Expanded
+                        }
+                    }
             )
         }
     }
