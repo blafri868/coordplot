@@ -1,6 +1,8 @@
 package com.kodeco.android.countryinfo.ui.screens.countrylist
 
 import android.annotation.SuppressLint
+import androidx.compose.animation.Crossfade
+import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
@@ -37,6 +39,11 @@ fun CountryListScreen(
     onAboutTap: () -> Unit,
 ) {
     val state by viewModel.uiState.collectAsState()
+    val transition = updateTransition(
+        targetState = state,
+        label = "UI state transition"
+    )
+
 
     Scaffold(
         topBar = {
@@ -55,23 +62,28 @@ fun CountryListScreen(
             )
         },
     ) { padding ->
-        Column(modifier = Modifier
-            .fillMaxSize()
-            .padding(padding)) {
-            when (val countryListState = state) {
-                is CountryListState.Loading -> Loading()
-                is CountryListState.Success -> CountryInfoList(
-                    countries = countryListState.countries,
-                    onRefreshTap = viewModel::fetchCountries,
-                    onCountryRowTap = onCountryRowTap,
-                    // TODO - OPTIONAL: wire up favorite listener
-                )
+        transition.Crossfade(contentKey = { it.javaClass }) {
+            Column(
+                modifier = Modifier.fillMaxSize().padding(padding)
+            ) {
+                when (val countryListState = it) {
+                    is CountryListState.Loading -> Loading()
+                    is CountryListState.Success -> CountryInfoList(
+                        countries = countryListState.countries,
+                        onRefreshTap = viewModel::fetchCountries,
+                        onCountryRowTap = onCountryRowTap,
+                        onCountryFavorite = { countryIndex ->
+                            val country = countryListState.countries[countryIndex]
+                            viewModel.favorite(country)
+                        }
+                    )
 
-                is CountryListState.Error -> Error(
-                    userFriendlyMessageText = stringResource(id = R.string.country_info_error),
-                    error = countryListState.error,
-                    onRetry = viewModel::fetchCountries,
-                )
+                    is CountryListState.Error -> Error(
+                        userFriendlyMessageText = stringResource(id = R.string.country_info_error),
+                        error = countryListState.error,
+                        onRetry = viewModel::fetchCountries,
+                    )
+                }
             }
         }
     }
