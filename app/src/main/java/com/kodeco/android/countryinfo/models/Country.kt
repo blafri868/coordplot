@@ -9,6 +9,7 @@ data class Country(
     val population: Long,
     val area: Float,
     val flags: CountryFlags,
+    val isFavorite: Boolean = false,
 ) {
     val mainCapital = capital?.firstOrNull() ?: "N/A"
     val commonName = name.common
