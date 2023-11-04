@@ -5,7 +5,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.kodeco.android.countryinfo.models.Country
 import com.kodeco.android.countryinfo.repositories.CountryRepository
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -46,8 +45,11 @@ class CountryListViewModel(
         _uiState.value = CountryListState.Loading
 
         viewModelScope.launch {
-            delay(1_500) // Delay added for visual effect
-            repository.fetchCountries()
+            try {
+                repository.fetchCountries()
+            } catch (e: Exception) {
+                _uiState.value = CountryListState.Error(e)
+            }
         }
     }
 

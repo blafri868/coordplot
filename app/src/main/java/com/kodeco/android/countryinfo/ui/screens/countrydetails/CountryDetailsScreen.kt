@@ -10,6 +10,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -29,10 +30,15 @@ import kotlinx.coroutines.flow.asStateFlow
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CountryDetailsScreen(
+    countryIndex: Int,
     viewModel: CountryDetailsViewModel,
     onNavigateUp: () -> Unit,
 ) {
     val uiState = viewModel.uiState.collectAsState()
+
+    LaunchedEffect(key1 = "getCountryDetails") {
+        viewModel.getCountryDetails(countryIndex)
+    }
 
     Scaffold(
         topBar = {
@@ -75,8 +81,8 @@ fun CountryDetailsScreen(
 @Composable
 fun CountryDetailsScreenPreview() {
     CountryDetailsScreen(
+        countryIndex = 0,
         viewModel = CountryDetailsViewModel(
-            countryId = 0,
             repository = object : CountryRepository {
                 override val countries: Flow<List<Country>>
                     get() = MutableStateFlow(sampleCountries).asStateFlow()
@@ -85,7 +91,7 @@ fun CountryDetailsScreenPreview() {
 
                 override fun getCountry(index: Int): Country = sampleCountry
 
-                override fun favorite(country: Country) {}
+                override suspend fun favorite(country: Country) {}
             },
         ),
         onNavigateUp = {},

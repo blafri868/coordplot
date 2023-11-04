@@ -9,7 +9,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.launch
 
 class CountryDetailsViewModel(
-    private val countryId: Int?,
     private val repository: CountryRepository,
 ) : ViewModel() {
 
@@ -17,30 +16,20 @@ class CountryDetailsViewModel(
 
     val uiState: StateFlow<CountryDetailsState> = _uiState
 
-    init {
-        getCountryById()
-    }
-
     class CountryDetailsViewModelFactory(
-        private val countryIndex: Int?,
         private val repository: CountryRepository,
     ) :
         ViewModelProvider.NewInstanceFactory() {
         @Suppress("UNCHECKED_CAST")
         override fun <T : ViewModel> create(modelClass: Class<T>): T =
-            CountryDetailsViewModel(countryIndex, repository) as T
+            CountryDetailsViewModel(repository) as T
     }
 
-    private fun getCountryById() {
+    fun getCountryDetails(countryIndex: Int) {
         viewModelScope.launch {
             _uiState.value = CountryDetailsState.Loading
 
-            if (countryId == null) {
-                _uiState.value = CountryDetailsState.Error(Exception("Country index is missing"))
-                return@launch
-            }
-
-            _uiState.value = repository.getCountry(countryId)?.let { country ->
+            _uiState.value = repository.getCountry(countryIndex)?.let { country ->
                 CountryDetailsState.Success(country)
             } ?: CountryDetailsState.Error(Exception("Country not found"))
         }

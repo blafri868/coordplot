@@ -37,7 +37,7 @@ class CountryRepositoryImpl(
     override fun getCountry(index: Int): Country? =
         _countries.value.getOrNull(index)
 
-    override fun favorite(country: Country) {
+    override suspend fun favorite(country: Country) {
         favorites = if (favorites.contains(country.commonName)) {
             favorites - country.commonName
         } else {

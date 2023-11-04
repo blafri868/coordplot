@@ -40,11 +40,11 @@ fun CountryInfoNavHost(
             route = "${Screen.Details.path}/{countryIndex}",
             arguments = listOf(navArgument("countryIndex") { type = NavType.IntType }),
         ) { backStackEntry ->
-            val countryIndex = backStackEntry.arguments?.getInt("countryIndex")
+            val countryIndex = backStackEntry.arguments!!.getInt("countryIndex")
             CountryDetailsScreen(
+                countryIndex = countryIndex,
                 viewModel = viewModel(
                     factory = CountryDetailsViewModel.CountryDetailsViewModelFactory(
-                        countryIndex = countryIndex,
                         repository = repository,
                     ),
                 ),

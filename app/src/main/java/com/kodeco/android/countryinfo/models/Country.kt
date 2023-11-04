@@ -1,17 +1,18 @@
 package com.kodeco.android.countryinfo.models
 
-import com.squareup.moshi.JsonClass
+import android.os.Parcelable
+import androidx.room.Entity
+import androidx.room.PrimaryKey
+import kotlinx.parcelize.Parcelize
 
-@JsonClass(generateAdapter = true)
+@Parcelize
+@Entity(tableName = "countries")
 data class Country(
-    val name: CountryName,
-    val capital: List<String>?,
+    @PrimaryKey
+    val commonName: String,
+    val mainCapital: String,
     val population: Long,
     val area: Float,
-    val flags: CountryFlags,
+    val flagUrl: String,
     val isFavorite: Boolean = false,
-) {
-    val mainCapital = capital?.firstOrNull() ?: "N/A"
-    val commonName = name.common
-    val flagUrl = flags.png
-}
+) : Parcelable

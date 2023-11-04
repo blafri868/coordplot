@@ -19,5 +19,4 @@
     <string name="about_screen_version">Version: %s</string>
     <string name="favorite">Favorite</string>
     <string name="error_button_retry_text">Retry</string>
-    <string name="favorite_icon">favorite_icon</string>
 </resources>

@@ -24,30 +24,30 @@ import com.kodeco.android.countryinfo.models.Country
 import com.kodeco.android.countryinfo.sample.sampleCountry
 import com.kodeco.android.countryinfo.ui.theme.MyApplicationTheme
 
-private enum class FlagState {
-    Expanded,
-    Shrunk
-}
-
 @Composable
 fun CountryDetails(
     country: Country,
     modifier: Modifier,
 ) {
-    var flagState by remember { mutableStateOf(FlagState.Shrunk) }
-    val flagTransition = updateTransition(targetState = flagState, label = "Flag transition")
-    val flagWidth by flagTransition.animateDp(label = "Flag size transition") {state ->
-        when (state) {
-            FlagState.Shrunk -> 150.dp
-            FlagState.Expanded -> 300.dp
-        }
-    }
-
     LazyColumn(modifier = modifier) {
         item { Text(text = "Capital: ${country.mainCapital}") }
         item { Text(text = "Population: ${country.population}") }
         item { Text(text = "Area: ${country.area}") }
         item {
+            var expanded by remember { mutableStateOf(false) }
+            val flagTransition = updateTransition(
+                targetState = expanded,
+                label = "${country.commonName}_details_transition",
+            )
+            val widthAnimation by flagTransition.animateDp(
+                label = "${country.commonName}_details_size",
+            ) { state ->
+                if (state) {
+                    300.dp
+                } else {
+                    150.dp
+                }
+            }
             AsyncImage(
                 model = ImageRequest.Builder(LocalContext.current)
                     .data(country.flagUrl)
@@ -57,13 +57,8 @@ fun CountryDetails(
                 contentScale = ContentScale.FillWidth,
                 modifier = Modifier
                     .border(1.dp, color = MaterialTheme.colorScheme.primary)
-                    .width(flagWidth)
-                    .clickable {
-                        flagState = when (flagState) {
-                            FlagState.Expanded -> FlagState.Shrunk
-                            FlagState.Shrunk -> FlagState.Expanded
-                        }
-                    }
+                    .width(widthAnimation)
+                    .clickable { expanded = !expanded },
             )
         }
     }

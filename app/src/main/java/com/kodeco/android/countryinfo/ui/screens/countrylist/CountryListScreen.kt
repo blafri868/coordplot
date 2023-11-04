@@ -3,7 +3,6 @@ package com.kodeco.android.countryinfo.ui.screens.countrylist
 import android.annotation.SuppressLint
 import androidx.compose.animation.Crossfade
 import androidx.compose.animation.core.updateTransition
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
@@ -39,11 +38,6 @@ fun CountryListScreen(
     onAboutTap: () -> Unit,
 ) {
     val state by viewModel.uiState.collectAsState()
-    val transition = updateTransition(
-        targetState = state,
-        label = "UI state transition"
-    )
-
 
     Scaffold(
         topBar = {
@@ -62,28 +56,29 @@ fun CountryListScreen(
             )
         },
     ) { padding ->
-        transition.Crossfade(contentKey = { it.javaClass }) {
-            Column(
-                modifier = Modifier.fillMaxSize().padding(padding)
-            ) {
-                when (val countryListState = it) {
-                    is CountryListState.Loading -> Loading()
-                    is CountryListState.Success -> CountryInfoList(
-                        countries = countryListState.countries,
-                        onRefreshTap = viewModel::fetchCountries,
-                        onCountryRowTap = onCountryRowTap,
-                        onCountryFavorite = { countryIndex ->
-                            val country = countryListState.countries[countryIndex]
-                            viewModel.favorite(country)
-                        }
-                    )
-
-                    is CountryListState.Error -> Error(
-                        userFriendlyMessageText = stringResource(id = R.string.country_info_error),
-                        error = countryListState.error,
-                        onRetry = viewModel::fetchCountries,
-                    )
-                }
+        val transition = updateTransition(
+            targetState = state,
+            label = "list_state_transition",
+        )
+        transition.Crossfade(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(padding),
+            contentKey = { it.javaClass },
+        ) { state ->
+            when (state) {
+                is CountryListState.Loading -> Loading()
+                is CountryListState.Success -> CountryInfoList(
+                    countries = state.countries,
+                    onRefreshTap = viewModel::fetchCountries,
+                    onCountryRowTap = onCountryRowTap,
+                    onCountryRowFavorite = viewModel::favorite,
+                )
+                is CountryListState.Error -> Error(
+                    userFriendlyMessageText = stringResource(id = R.string.country_info_error),
+                    error = state.error,
+                    onRetry = viewModel::fetchCountries,
+                )
             }
         }
     }
@@ -102,7 +97,7 @@ fun CountryInfoScreenPreview() {
 
                 override fun getCountry(index: Int): Country = sampleCountry
 
-                override fun favorite(country: Country) {}
+                override suspend fun favorite(country: Country) {}
             },
         ),
         onCountryRowTap = {},

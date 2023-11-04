@@ -1,7 +1,9 @@
 package com.kodeco.android.countryinfo.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -18,23 +20,29 @@ fun CountryInfoList(
     countries: List<Country>,
     onRefreshTap: () -> Unit,
     onCountryRowTap: (countryIndex: Int) -> Unit,
-    onCountryFavorite: (countryIndex: Int) -> Unit
+    onCountryRowFavorite: (country: Country) -> Unit,
 ) {
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.Center,
-    ) {
-        Button(onClick = onRefreshTap) {
-            Text(text = stringResource(id = R.string.country_info_refresh_button_text))
+    Column(modifier = Modifier.fillMaxSize()) {
+        Row(
+            modifier = Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.Center,
+        ) {
+            Button(onClick = onRefreshTap) {
+                Text(text = stringResource(id = R.string.country_info_refresh_button_text))
+            }
         }
-    }
-    LazyColumn(modifier = Modifier.fillMaxWidth()) {
-        itemsIndexed(countries) { index, country ->
-            CountryInfoRow(
-                country = country,
-                onTap = { onCountryRowTap(index) },
-                onFavorite = { onCountryFavorite(index) }
-            )
+        LazyColumn(modifier = Modifier.fillMaxWidth()) {
+            itemsIndexed(countries) { index, country ->
+                CountryInfoRow(
+                    country = country,
+                    onTap = {
+                        onCountryRowTap(index)
+                    },
+                    onFavorite = {
+                        onCountryRowFavorite(country)
+                    }
+                )
+            }
         }
     }
 }
