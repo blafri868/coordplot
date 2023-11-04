@@ -29,20 +29,20 @@ fun CountryInfoNavHost(
                         repository = repository,
                     ),
                 ),
-                onCountryRowTap = { countryIndex ->
-                    navController.navigate("${Screen.Details.path}/$countryIndex")
+                onCountryRowTap = { countryName ->
+                    navController.navigate("${Screen.Details.path}/$countryName")
                 },
                 onAboutTap = { navController.navigate(Screen.About.path) },
             )
         }
 
         composable(
-            route = "${Screen.Details.path}/{countryIndex}",
-            arguments = listOf(navArgument("countryIndex") { type = NavType.IntType }),
+            route = "${Screen.Details.path}/{countryName}",
+            arguments = listOf(navArgument("countryName") { type = NavType.StringType }),
         ) { backStackEntry ->
-            val countryIndex = backStackEntry.arguments!!.getInt("countryIndex")
+            val countryName = backStackEntry.arguments!!.getString("countryName") ?: ""
             CountryDetailsScreen(
-                countryIndex = countryIndex,
+                countryName = countryName,
                 viewModel = viewModel(
                     factory = CountryDetailsViewModel.CountryDetailsViewModelFactory(
                         repository = repository,

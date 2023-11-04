@@ -3,6 +3,8 @@ package com.kodeco.android.countryinfo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.lifecycle.lifecycleScope
+import com.kodeco.android.countryinfo.databases.CountryInfoDatabase
 import com.kodeco.android.countryinfo.network.CountryService
 import com.kodeco.android.countryinfo.network.adapters.CountryAdapter
 import com.kodeco.android.countryinfo.repositories.CountryRepository
@@ -26,8 +28,12 @@ class MainActivity : ComponentActivity() {
             .addConverterFactory(MoshiConverterFactory.create(moshi))
             .build()
 
+        val database: CountryInfoDatabase = CountryInfoDatabase.buildDatabase(this)
         val service: CountryService = retrofit.create(CountryService::class.java)
-        val repository: CountryRepository = CountryRepositoryImpl(service)
+        val repository: CountryRepository = CountryRepositoryImpl(
+            service = service,
+            countryDao = database.countryDao()
+        )
 
         setContent {
             MyApplicationTheme {
