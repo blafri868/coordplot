@@ -1,51 +1,35 @@
 package com.kodeco.android.countryinfo.repositories
 
+import com.kodeco.android.countryinfo.databases.daos.CountryDao
 import com.kodeco.android.countryinfo.models.Country
 import com.kodeco.android.countryinfo.network.CountryService
-import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
-import kotlinx.coroutines.flow.asStateFlow
 
 class CountryRepositoryImpl(
-    private val service: CountryService,
+    private val countryDao: CountryDao,
+    private val service: CountryService
 ) : CountryRepository {
-
-    private var favorites = setOf<String>()
-
-    private val _countries: MutableStateFlow<List<Country>> = MutableStateFlow(emptyList())
-    override val countries: StateFlow<List<Country>> = _countries.asStateFlow()
+    override val countries
+        get() = countryDao.loadCountries()
 
     override suspend fun fetchCountries() {
-        val countriesResponse = service.getAllCountries()
+        val response = service.getAllCountries()
+        val favorites = countryDao.getFavorites().map { country -> country.commonName }
 
-        _countries.value = emptyList()
-        _countries.value = try {
-            if (countriesResponse.isSuccessful) {
-                countriesResponse.body()!!
-                    .toMutableList()
-                    .map { country ->
-                        country.copy(isFavorite = favorites.contains(country.commonName))
-                    }
+        val countryList = response.map { country ->
+            if (favorites.contains(country.commonName)) {
+                country.copy(isFavorite = true)
             } else {
-                throw Throwable("Request failed: ${countriesResponse.message()}")
+                country
             }
-        } catch (e: Exception) {
-            throw Throwable("Request failed: ${e.message}")
         }
+        countryDao.deleteAll()
+        countryDao.addCountries(countryList)
     }
 
-    override fun getCountry(index: Int): Country? =
-        _countries.value.getOrNull(index)
+    override suspend fun getCountry(name: String): Country? = countryDao.getCountryByCommonName(name)
 
     override suspend fun favorite(country: Country) {
-        favorites = if (favorites.contains(country.commonName)) {
-            favorites - country.commonName
-        } else {
-            favorites + country.commonName
-        }
-        val index = _countries.value.indexOf(country)
-        val mutableCountries = _countries.value.toMutableList()
-        mutableCountries[index] = mutableCountries[index].copy(isFavorite = favorites.contains(country.commonName))
-        _countries.value = mutableCountries.toList()
+        val isFavorite = !country.isFavorite
+        countryDao.updateCountry(country.copy(isFavorite = isFavorite))
     }
 }

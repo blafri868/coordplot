@@ -1,10 +1,12 @@
 package com.kodeco.android.countryinfo.ui.screens.countrylist
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.kodeco.android.countryinfo.models.Country
 import com.kodeco.android.countryinfo.repositories.CountryRepository
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -18,19 +20,9 @@ class CountryListViewModel(
     private val _uiState = MutableStateFlow<CountryListState>(CountryListState.Loading)
 
     val uiState: StateFlow<CountryListState> = _uiState.asStateFlow()
+    val countriesFlow = repository.countries
 
     init {
-        viewModelScope.launch {
-            repository
-                .countries
-                .catch {
-                    _uiState.value = CountryListState.Error(it)
-                }
-                .collect {
-                    _uiState.value = CountryListState.Success(it)
-                }
-        }
-
         fetchCountries()
     }
 
@@ -45,11 +37,15 @@ class CountryListViewModel(
         _uiState.value = CountryListState.Loading
 
         viewModelScope.launch {
-            try {
+            val message = try {
                 repository.fetchCountries()
+                "Successfully updated the list of countries"
             } catch (e: Exception) {
-                _uiState.value = CountryListState.Error(e)
+                delay(1000L)
+                "Failed to updated the list of countries"
             }
+
+            _uiState.value = CountryListState.FinishedLoading(message)
         }
     }
 

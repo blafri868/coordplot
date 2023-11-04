@@ -25,11 +25,11 @@ class CountryDetailsViewModel(
             CountryDetailsViewModel(repository) as T
     }
 
-    fun getCountryDetails(countryIndex: Int) {
+    fun getCountryDetails(countryName: String) {
         viewModelScope.launch {
             _uiState.value = CountryDetailsState.Loading
 
-            _uiState.value = repository.getCountry(countryIndex)?.let { country ->
+            _uiState.value = repository.getCountry(countryName)?.let { country ->
                 CountryDetailsState.Success(country)
             } ?: CountryDetailsState.Error(Exception("Country not found"))
         }

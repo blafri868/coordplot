@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
@@ -19,7 +20,7 @@ import com.kodeco.android.countryinfo.models.Country
 fun CountryInfoList(
     countries: List<Country>,
     onRefreshTap: () -> Unit,
-    onCountryRowTap: (countryIndex: Int) -> Unit,
+    onCountryRowTap: (countryName: String) -> Unit,
     onCountryRowFavorite: (country: Country) -> Unit,
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
@@ -32,11 +33,11 @@ fun CountryInfoList(
             }
         }
         LazyColumn(modifier = Modifier.fillMaxWidth()) {
-            itemsIndexed(countries) { index, country ->
+            items(countries) { country ->
                 CountryInfoRow(
                     country = country,
                     onTap = {
-                        onCountryRowTap(index)
+                        onCountryRowTap(country.commonName)
                     },
                     onFavorite = {
                         onCountryRowFavorite(country)
