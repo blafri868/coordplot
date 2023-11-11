@@ -4,6 +4,7 @@
     <!-- General Navigation -->
     <string name="nav_back_content_description">Back</string>
     <string name="about_content_description">Action</string>
+    <string name="settings_page_button">Go to settings</string>
 
     <!-- Country Info Screen -->
     <string name="country_info_screen_title">Country Info</string>
@@ -19,4 +20,9 @@
     <string name="about_screen_version">Version: %s</string>
     <string name="favorite">Favorite</string>
     <string name="error_button_retry_text">Retry</string>
+
+    <!-- Settings Screen -->
+    <string name="settings_screen_title">Settings</string>
+    <string name="settings_local_storage_feature">Enable Local Storage</string>
+    <string name="settings_favorites_feature">Enable Favorites Feature</string>
 </resources>

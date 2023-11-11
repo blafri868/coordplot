@@ -11,6 +11,7 @@ import com.kodeco.android.countryinfo.ui.screens.Screen
 import com.kodeco.android.countryinfo.ui.screens.about.AboutScreen
 import com.kodeco.android.countryinfo.ui.screens.countrydetails.CountryDetailsScreen
 import com.kodeco.android.countryinfo.ui.screens.countrylist.CountryListScreen
+import com.kodeco.android.countryinfo.ui.screens.settings.SettingsScreen
 
 @Composable
 fun CountryInfoNavHost() {
@@ -24,6 +25,7 @@ fun CountryInfoNavHost() {
                     navController.navigate("${Screen.Details.path}/$countryIndex")
                 },
                 onAboutTap = { navController.navigate(Screen.About.path) },
+                onSettingsTap = { navController.navigate(Screen.Settings.path) }
             )
         }
 
@@ -41,6 +43,12 @@ fun CountryInfoNavHost() {
 
         composable(Screen.About.path) {
             AboutScreen(
+                onNavigateUp = { navController.navigateUp() },
+            )
+        }
+
+        composable(Screen.Settings.path) {
+            SettingsScreen(
                 onNavigateUp = { navController.navigateUp() },
             )
         }

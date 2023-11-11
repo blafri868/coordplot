@@ -6,6 +6,7 @@ import androidx.compose.animation.core.updateTransition
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Comment
 import androidx.compose.material.icons.automirrored.filled.Help
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -36,6 +37,7 @@ fun CountryListScreen(
     viewModel: CountryListViewModel,
     onCountryRowTap: (countryIndex: Int) -> Unit,
     onAboutTap: () -> Unit,
+    onSettingsTap: () -> Unit
 ) {
     val state by viewModel.uiState.collectAsState()
 
@@ -44,6 +46,14 @@ fun CountryListScreen(
             TopAppBar(
                 title = { Text(text = stringResource(id = R.string.country_info_screen_title)) },
                 actions = {
+                    IconButton(
+                        onClick = onSettingsTap,
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.Comment,
+                            contentDescription = stringResource(id = R.string.settings_page_button),
+                        )
+                    }
                     IconButton(
                         onClick = onAboutTap,
                     ) {
@@ -102,5 +112,6 @@ fun CountryInfoScreenPreview() {
         ),
         onCountryRowTap = {},
         onAboutTap = {},
+        onSettingsTap = {}
     )
 }
