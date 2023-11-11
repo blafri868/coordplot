@@ -8,5 +8,5 @@ import retrofit2.http.GET
 interface CountryService {
     @GET("v3.1/all")
     @WrappedCountryList
-    suspend fun getAllCountries(): List<Country>
+    suspend fun getAllCountries(): Response<List<Country>>
 }

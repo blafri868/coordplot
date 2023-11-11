@@ -10,16 +10,11 @@ import androidx.compose.material.icons.automirrored.filled.Help
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SnackbarDuration
-import androidx.compose.material3.SnackbarHost
-import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -31,7 +26,6 @@ import com.kodeco.android.countryinfo.sample.sampleCountry
 import com.kodeco.android.countryinfo.ui.components.CountryInfoList
 import com.kodeco.android.countryinfo.ui.components.Error
 import com.kodeco.android.countryinfo.ui.components.Loading
-import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -40,17 +34,12 @@ import kotlinx.coroutines.flow.asStateFlow
 @Composable
 fun CountryListScreen(
     viewModel: CountryListViewModel,
-    onCountryRowTap: (countryName: String) -> Unit,
+    onCountryRowTap: (countryIndex: Int) -> Unit,
     onAboutTap: () -> Unit,
 ) {
     val state by viewModel.uiState.collectAsState()
-    val countries by viewModel.countriesFlow.collectAsState(initial = emptyList())
-    val snackbarHostState = remember { SnackbarHostState() }
 
     Scaffold(
-        snackbarHost = {
-            SnackbarHost(hostState = snackbarHostState)
-        },
         topBar = {
             TopAppBar(
                 title = { Text(text = stringResource(id = R.string.country_info_screen_title)) },
@@ -79,20 +68,17 @@ fun CountryListScreen(
         ) { state ->
             when (state) {
                 is CountryListState.Loading -> Loading()
-                is CountryListState.FinishedLoading -> {
-                    CountryInfoList(
-                        countries = countries,
-                        onRefreshTap = viewModel::fetchCountries,
-                        onCountryRowTap = onCountryRowTap,
-                        onCountryRowFavorite = viewModel::favorite,
-                    )
-                    LaunchedEffect(snackbarHostState) {
-                        snackbarHostState.showSnackbar(
-                            message = state.message,
-                            duration = SnackbarDuration.Short
-                        )
-                    }
-                }
+                is CountryListState.Success -> CountryInfoList(
+                    countries = state.countries,
+                    onRefreshTap = viewModel::fetchCountries,
+                    onCountryRowTap = onCountryRowTap,
+                    onCountryRowFavorite = viewModel::favorite,
+                )
+                is CountryListState.Error -> Error(
+                    userFriendlyMessageText = stringResource(id = R.string.country_info_error),
+                    error = state.error,
+                    onRetry = viewModel::fetchCountries,
+                )
             }
         }
     }
@@ -109,7 +95,7 @@ fun CountryInfoScreenPreview() {
 
                 override suspend fun fetchCountries() {}
 
-                override suspend fun getCountry(name: String): Country = sampleCountry
+                override fun getCountry(index: Int): Country = sampleCountry
 
                 override suspend fun favorite(country: Country) {}
             },

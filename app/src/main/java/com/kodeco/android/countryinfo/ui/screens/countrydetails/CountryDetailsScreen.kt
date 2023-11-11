@@ -30,14 +30,14 @@ import kotlinx.coroutines.flow.asStateFlow
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun CountryDetailsScreen(
-    countryName: String,
+    countryIndex: Int,
     viewModel: CountryDetailsViewModel,
     onNavigateUp: () -> Unit,
 ) {
     val uiState = viewModel.uiState.collectAsState()
 
     LaunchedEffect(key1 = "getCountryDetails") {
-        viewModel.getCountryDetails(countryName)
+        viewModel.getCountryDetails(countryIndex)
     }
 
     Scaffold(
@@ -81,7 +81,7 @@ fun CountryDetailsScreen(
 @Composable
 fun CountryDetailsScreenPreview() {
     CountryDetailsScreen(
-        countryName = "United States",
+        countryIndex = 0,
         viewModel = CountryDetailsViewModel(
             repository = object : CountryRepository {
                 override val countries: Flow<List<Country>>
@@ -89,7 +89,7 @@ fun CountryDetailsScreenPreview() {
 
                 override suspend fun fetchCountries() {}
 
-                override suspend fun getCountry(name: String): Country = sampleCountry
+                override fun getCountry(index: Int): Country = sampleCountry
 
                 override suspend fun favorite(country: Country) {}
             },
