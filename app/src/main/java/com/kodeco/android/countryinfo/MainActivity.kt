@@ -3,8 +3,10 @@ package com.kodeco.android.countryinfo
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.lifecycleScope
 import com.kodeco.android.countryinfo.databases.CountryInfoDatabase
+import com.kodeco.android.countryinfo.datastores.CountryInfoStoreImpl
 import com.kodeco.android.countryinfo.network.CountryService
 import com.kodeco.android.countryinfo.network.adapters.CountryAdapter
 import com.kodeco.android.countryinfo.repositories.CountryRepository
@@ -30,14 +32,16 @@ class MainActivity : ComponentActivity() {
 
         val database: CountryInfoDatabase = CountryInfoDatabase.buildDatabase(this)
         val service: CountryService = retrofit.create(CountryService::class.java)
+        val prefs = CountryInfoStoreImpl(this)
         val repository: CountryRepository = CountryRepositoryImpl(
             service = service,
-            countryDao = database.countryDao()
+            countryDao = database.countryDao(),
+            prefs = prefs
         )
 
         setContent {
             MyApplicationTheme {
-                CountryInfoNavHost(repository = repository)
+                CountryInfoNavHost(repository = repository, prefs = prefs)
             }
         }
     }

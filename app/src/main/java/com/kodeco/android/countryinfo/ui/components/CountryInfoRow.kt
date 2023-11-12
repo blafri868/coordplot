@@ -21,6 +21,7 @@ import com.kodeco.android.countryinfo.sample.sampleCountry
 fun CountryInfoRow(
     country: Country,
     onTap: () -> Unit,
+    isFavoritesFeatureEnabled: Boolean,
     onFavorite: () -> Unit,
 ) {
     Card(
@@ -38,7 +39,7 @@ fun CountryInfoRow(
                 Text(text = "Name: ${country.commonName}")
                 Text(text = "Capital: ${country.mainCapital}")
             }
-            FavoriteStar(country = country, onTap = onFavorite)
+            if (isFavoritesFeatureEnabled) { FavoriteStar(country = country, onTap = onFavorite) }
         }
 
     }
@@ -50,6 +51,7 @@ fun CountryInfoRowPreview() {
     CountryInfoRow(
         country = sampleCountry,
         onTap = {},
+        isFavoritesFeatureEnabled = true,
         onFavorite = {},
     )
 }
