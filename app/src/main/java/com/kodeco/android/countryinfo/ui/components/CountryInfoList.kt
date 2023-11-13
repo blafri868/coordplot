@@ -21,7 +21,10 @@ fun CountryInfoList(
     countries: List<Country>,
     onRefreshTap: () -> Unit,
     onCountryRowTap: (countryName: String) -> Unit,
+    isFavoritesFeatureEnabled: Boolean,
     onCountryRowFavorite: (country: Country) -> Unit,
+    isFetchCountriesSuccessful: Boolean,
+    isLocalStorageEnabled: Boolean
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
         Row(
@@ -32,17 +35,20 @@ fun CountryInfoList(
                 Text(text = stringResource(id = R.string.country_info_refresh_button_text))
             }
         }
-        LazyColumn(modifier = Modifier.fillMaxWidth()) {
-            items(countries) { country ->
-                CountryInfoRow(
-                    country = country,
-                    onTap = {
-                        onCountryRowTap(country.commonName)
-                    },
-                    onFavorite = {
-                        onCountryRowFavorite(country)
-                    }
-                )
+        if (isFetchCountriesSuccessful || isLocalStorageEnabled) {
+            LazyColumn(modifier = Modifier.fillMaxWidth()) {
+                items(countries) { country ->
+                    CountryInfoRow(
+                        country = country,
+                        onTap = {
+                            onCountryRowTap(country.commonName)
+                        },
+                        isFavoritesFeatureEnabled = isFavoritesFeatureEnabled,
+                        onFavorite = {
+                            onCountryRowFavorite(country)
+                        }
+                    )
+                }
             }
         }
     }

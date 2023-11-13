@@ -1,12 +1,14 @@
 package com.kodeco.android.countryinfo.repositories
 
 import com.kodeco.android.countryinfo.databases.daos.CountryDao
+import com.kodeco.android.countryinfo.datastores.CountryInfoStore
 import com.kodeco.android.countryinfo.models.Country
 import com.kodeco.android.countryinfo.network.CountryService
 
 class CountryRepositoryImpl(
     private val countryDao: CountryDao,
-    private val service: CountryService
+    private val service: CountryService,
+    private val prefs: CountryInfoStore
 ) : CountryRepository {
     override val countries
         get() = countryDao.loadCountries()
